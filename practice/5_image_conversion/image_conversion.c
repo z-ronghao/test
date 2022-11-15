@@ -17,7 +17,7 @@ int bmp_2_rgb24(char* bmpName, uint8_t **rgbdata, int *file_width, int *file_hei
     BitmapInfoHeader bmpfileinfo;
     int bmpline, i, j;
 
-    FILE* bmpfile = fopen(bmpName, "r");
+    FILE* bmpfile = fopen(bmpName, "rb");
     if(!bmpfile) {
         printf("Could not open file \n");
         return -1;
@@ -80,7 +80,7 @@ int bmp_2_rgb24(char* bmpName, uint8_t **rgbdata, int *file_width, int *file_hei
         //    fwrite(&b, 1, 1, rgbfile);
         }
     }
-    printf("out rgbdata ok\n");
+    printf("read rgbdata ok\n");
     // fclose(rgbfile);
     fflush(bmpfile);
     fclose(bmpfile);
@@ -153,7 +153,7 @@ int png_2_rgb24(char* pngName, uint8_t **rgbdata, int *file_width, int *file_hei
     png_read_image(png_ptr, rows);
     png_read_end(png_ptr,info_ptr);
     png_destroy_read_struct(&png_ptr,&info_ptr,NULL);
-    printf("out rgbdata ok\n");
+    printf("read rgbdata ok\n");
     fflush(pngfile);
     fclose(pngfile);
     free(rows);
@@ -199,7 +199,7 @@ int jpeg_2_yuv420(char* jpegName, uint8_t **yuvdata, int *file_width, int *file_
     free(jpegData);
     fflush(jpegFile);
     fclose(jpegFile);
-    printf("out yuvdata ok\n");
+    printf("read yuvdata ok\n");
     return ret;
 }
 
@@ -240,7 +240,7 @@ int rgb24_2_yuv420(uint8_t *rgbdata, uint8_t *yuvdata, int width, int height)
             }
         }
     }
-    printf("out yuv data ok\n");
+    printf("read yuv data ok\n");
 }
 int yuv420_2_rgb24(uint8_t *yuvdata, uint8_t *rgbdata, int width, int height)
 {
@@ -271,7 +271,7 @@ int index_y, index_u, index_v;
 			
 		}
 	}
-    printf("out rgb data ok\n");
+    printf("read rgb data ok\n");
 }
 
 int rgb24_2_bmp(uint8_t *rgbdata, char *bmpName, int width, int height)
@@ -336,7 +336,7 @@ int rgb24_2_bmp(uint8_t *rgbdata, char *bmpName, int width, int height)
     }
     fflush(bmpfile);
     fclose(bmpfile);
-    printf("out bmp data ok\n");
+    printf("out bmp file ok\n");
 
 }
 int rgb24_2_png(uint8_t *rgbdata, char *pngName, int width, int height)
@@ -407,7 +407,7 @@ int rgb24_2_png(uint8_t *rgbdata, char *pngName, int width, int height)
     png_destroy_write_struct(&png_ptr, &info_ptr);
     fflush(png_file);
     fclose(png_file);
-    printf("out png data ok\n");
+    printf("out png file ok\n");
 }
 int yuv420_2_jpeg(uint8_t *yuvdata, char *jpegName, int width, int height)
 {
@@ -446,7 +446,7 @@ int yuv420_2_jpeg(uint8_t *yuvdata, char *jpegName, int width, int height)
     free(jpegdata);
     fflush(jpegfile);
     fclose(jpegfile);
-    printf("out jpeg data ok\n");
+    printf("out jpeg file ok\n");
 
     return ret;
 }

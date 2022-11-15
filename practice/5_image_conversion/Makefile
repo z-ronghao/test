@@ -3,7 +3,7 @@ TARGET = conversion
 SOURCE = $(wildcard ./*.c)
 OBJECTS = $(patsubst ./%.c, ./%.o, $(SOURCE))
 INCLUDE = -I./include/
-LIB_PATH = ./lib
+LIB_PATH = ./include/lib
 LIBS = -lturbojpeg -lpng
 
 

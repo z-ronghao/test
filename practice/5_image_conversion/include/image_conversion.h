@@ -7,7 +7,6 @@
 #include <string.h>
 #include <setjmp.h>
 #include <sys/stat.h>
-//#include <jpeglib.h>
 #include <libpng/png.h>
 #include <libturbo-jpeg/turbojpeg.h>
 

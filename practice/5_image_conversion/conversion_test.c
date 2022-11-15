@@ -32,9 +32,15 @@ int main(int argc, char *argv[])
             bmp_2_rgb24(infilename, &rgbdata, &file_width, &file_height);
 
             FILE *rgbfile = fopen(outfilename, "wb");
+            if(!rgbfile) 
+            {
+                printf("Could not open rgbfile \n");
+                return -1;
+            }
             fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
             fflush(rgbfile);
             fclose(rgbfile);
+            printf("out rgb file ok\n");
 
 		    strcpy(outfilename + (infilelen - 3), "png");
             rgb24_2_png(rgbdata, outfilename, file_width, file_height);
@@ -44,6 +50,11 @@ int main(int argc, char *argv[])
             rgb24_2_yuv420(rgbdata, yuvdata, file_width, file_height);
 
             FILE *yuvfile = fopen(outfilename, "wb");
+            if(!yuvfile) 
+            {
+                printf("Could not open yuvfile \n");
+                return -1;
+            }
             fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
             fflush(yuvfile);
             fclose(yuvfile);
@@ -61,9 +72,15 @@ int main(int argc, char *argv[])
             png_2_rgb24(infilename, &rgbdata, &file_width, &file_height);
             
             FILE *rgbfile = fopen(outfilename, "wb");
+            if(!rgbfile) 
+            {
+                printf("Could not open rgbfile \n");
+                return -1;
+            }
             fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
             fflush(rgbfile);
             fclose(rgbfile);
+            printf("out rgb file ok\n");
 
 		    strcpy(outfilename + (infilelen - 3), "bmp");
             rgb24_2_bmp(rgbdata, outfilename, file_width, file_height);
@@ -73,6 +90,11 @@ int main(int argc, char *argv[])
             rgb24_2_yuv420(rgbdata, yuvdata, file_width, file_height);
 
             FILE *yuvfile = fopen(outfilename, "wb");
+            if(!yuvfile) 
+            {
+                printf("Could not open yuvfile \n");
+                return -1;
+            }
             fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
             fflush(yuvfile);
             fclose(yuvfile);
@@ -89,18 +111,30 @@ int main(int argc, char *argv[])
             jpeg_2_yuv420(infilename, &yuvdata, &file_width, &file_height, &yuv_size);
 
             FILE *yuvfile = fopen(outfilename, "wb");
+            if(!yuvfile) 
+            {
+                printf("Could not open yuvfile \n");
+                return -1;
+            }
             fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
             fflush(yuvfile);
             fclose(yuvfile);
+            printf("out yuv file ok\n");
             
             strcpy(outfilename + (infilelen - 3), "rgb");
             rgbdata = (uint8_t *)malloc(file_width* file_height* 3);
             yuv420_2_rgb24(yuvdata, rgbdata, file_width, file_height);
 
             FILE *rgbfile = fopen(outfilename, "wb");
+            if(!rgbfile) 
+            {
+                printf("Could not open rgbfile \n");
+                return -1;
+            }
             fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
             fflush(rgbfile);
             fclose(rgbfile);
+            printf("out rgb file ok\n");
 
             strcpy(outfilename + (infilelen - 3), "bmp");
             rgb24_2_bmp(rgbdata, outfilename, file_width, file_height);
@@ -115,18 +149,30 @@ int main(int argc, char *argv[])
             jpeg_2_yuv420(infilename, &yuvdata, &file_width, &file_height, &yuv_size);
 
             FILE *yuvfile = fopen(outfilename, "wb");
+            if(!yuvfile) 
+            {
+                printf("Could not open yuvfile \n");
+                return -1;
+            }
             fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
             fflush(yuvfile);
             fclose(yuvfile);
+            printf("out yuv file ok\n");
 
             strcpy(outfilename + (infilelen - 4), "rgb");
             rgbdata = (uint8_t *)malloc(file_width* file_height* 3);
             yuv420_2_rgb24(yuvdata, rgbdata, file_width, file_height);
             
             FILE *rgbfile = fopen(outfilename, "wb");
+            if(!rgbfile) 
+            {
+                printf("Could not open rgbfile \n");
+                return -1;
+            }
             fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
             fflush(rgbfile);
             fclose(rgbfile);
+            printf("out rgb file ok\n");
 
             strcpy(outfilename + (infilelen - 4), "bmp");
             rgb24_2_bmp(rgbdata, outfilename, file_width, file_height);
