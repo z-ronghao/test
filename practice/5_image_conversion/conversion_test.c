@@ -1,34 +1,149 @@
 #include "image_conversion.h"
-#include "image_conversion.c"
 
 int main(int argc, char *argv[])
 {
-    char *infilename;
-    char *outfilename;
-    // filename = "./image/2560x1440.rgb";
-    // FILE *rgbfile = fopen(filename, "rb");
-    // uint8_t *rgbdata = (uint8_t *)malloc(3* 2560 *1440);
-    // fread(rgbdata, 1, 3* 2560 *1440, rgbfile);
-    // rgb_2_bmp(rgbdata, "2560x1440.bmp", 2560, 1440);
-    // free(rgbdata);
-    // fclose(rgbfile);
+    char infilename[64];
+    char outfilename[64];
+    int file_width, file_height, yuv_size;
+    const char *pFile;
+    uint8_t infilelen;
+    uint8_t *rgbdata;
+    uint8_t *yuvdata;
 
-    // filename = "./image/2560x1440.rgb";
-    // FILE *rgbfile = fopen(filename, "wb");
-    // uint8_t *rgbdata = (uint8_t *)malloc(3* 2560 *1440);
-    // bmp_2_rgb24("./image/2560x1440.bmp", rgbdata);
-    // fwrite(rgbdata, 1, 3* 2560* 1440, rgbfile);
-    // fclose(rgbfile);
-    // free(rgbdata);
+    if (argc > 1)
+	{
+	    strcpy(infilename, argv[1]);
+        strcpy(outfilename, infilename);
+	    infilelen = strlen(infilename);
+    }
+    else
+    {   
+        printf("****   Please set input file(BMP/PNG/JPEG) ****\n\n");
+        return 0;
+    }
 
-    infilename = "./image/2560x1440.rgb";
-    outfilename = "./test.png";
-    FILE *rgbfile = fopen(infilename, "rb");
-    uint8_t *rgbdata = (uint8_t *)malloc(3* 2560 *1440);
-    fread(rgbdata, 1, 3* 2560 *1440, rgbfile);
-    rgb24_2_png(rgbdata, outfilename, 2560, 1440);
-    
+    pFile = strrchr(infilename, '.'); 
+    if (pFile != NULL)
+    { 
+        if (strcmp(pFile, ".bmp") == 0)
+        { 
+            printf("\n*************Input File is bmp File************\n\n");
+            strcpy(outfilename + (infilelen - 3), "rgb");
+            bmp_2_rgb24(infilename, &rgbdata, &file_width, &file_height);
+
+            FILE *rgbfile = fopen(outfilename, "wb");
+            fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
+            fflush(rgbfile);
+            fclose(rgbfile);
+
+		    strcpy(outfilename + (infilelen - 3), "png");
+            rgb24_2_png(rgbdata, outfilename, file_width, file_height);
+
+            strcpy(outfilename + (infilelen - 3), "yuv");
+            yuvdata = malloc(file_height* file_width* 3 /2);
+            rgb24_2_yuv420(rgbdata, yuvdata, file_width, file_height);
+
+            FILE *yuvfile = fopen(outfilename, "wb");
+            fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
+            fflush(yuvfile);
+            fclose(yuvfile);
+            printf("out yuv file ok\n");
+
+            strcpy(outfilename + (infilelen - 3), "jpeg");
+            yuv420_2_jpeg(yuvdata, outfilename, file_width, file_height);
+
+ 
+        }
+        else if (strcmp(pFile, ".png") == 0)
+        { 
+            printf("\n*************Input File is png File*************\n\n");
+            strcpy(outfilename + (infilelen - 3), "rgb");
+            png_2_rgb24(infilename, &rgbdata, &file_width, &file_height);
+            
+            FILE *rgbfile = fopen(outfilename, "wb");
+            fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
+            fflush(rgbfile);
+            fclose(rgbfile);
+
+		    strcpy(outfilename + (infilelen - 3), "bmp");
+            rgb24_2_bmp(rgbdata, outfilename, file_width, file_height);
+
+            strcpy(outfilename + (infilelen - 3), "yuv");
+            yuvdata = malloc(file_height* file_width* 3 /2);
+            rgb24_2_yuv420(rgbdata, yuvdata, file_width, file_height);
+
+            FILE *yuvfile = fopen(outfilename, "wb");
+            fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
+            fflush(yuvfile);
+            fclose(yuvfile);
+            printf("out yuv file ok\n");
+
+            strcpy(outfilename + (infilelen - 3), "jpeg");
+            yuv420_2_jpeg(yuvdata, outfilename, file_width, file_height);
+
+        }
+        else if(strcmp(pFile, ".jpg") == 0)
+        {
+            printf("\n*************Input File is jpg File*************\n\n");
+            strcpy(outfilename + (infilelen - 3), "yuv");
+            jpeg_2_yuv420(infilename, &yuvdata, &file_width, &file_height, &yuv_size);
+
+            FILE *yuvfile = fopen(outfilename, "wb");
+            fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
+            fflush(yuvfile);
+            fclose(yuvfile);
+            
+            strcpy(outfilename + (infilelen - 3), "rgb");
+            rgbdata = (uint8_t *)malloc(file_width* file_height* 3);
+            yuv420_2_rgb24(yuvdata, rgbdata, file_width, file_height);
+
+            FILE *rgbfile = fopen(outfilename, "wb");
+            fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
+            fflush(rgbfile);
+            fclose(rgbfile);
+
+            strcpy(outfilename + (infilelen - 3), "bmp");
+            rgb24_2_bmp(rgbdata, outfilename, file_width, file_height);
+
+            strcpy(outfilename + (infilelen - 3), "png");
+            rgb24_2_png(rgbdata, outfilename, file_width, file_height);
+        }
+        else if(strcmp(pFile, ".jpeg") == 0)
+        {
+            printf("\n*************Input File is jpeg File*************\n\n");
+            strcpy(outfilename + (infilelen - 4), "yuv");
+            jpeg_2_yuv420(infilename, &yuvdata, &file_width, &file_height, &yuv_size);
+
+            FILE *yuvfile = fopen(outfilename, "wb");
+            fwrite(yuvdata, 1, file_width* file_height* 3/2, yuvfile);
+            fflush(yuvfile);
+            fclose(yuvfile);
+
+            strcpy(outfilename + (infilelen - 4), "rgb");
+            rgbdata = (uint8_t *)malloc(file_width* file_height* 3);
+            yuv420_2_rgb24(yuvdata, rgbdata, file_width, file_height);
+            
+            FILE *rgbfile = fopen(outfilename, "wb");
+            fwrite(rgbdata, 1, file_width* file_height* 3, rgbfile);
+            fflush(rgbfile);
+            fclose(rgbfile);
+
+            strcpy(outfilename + (infilelen - 4), "bmp");
+            rgb24_2_bmp(rgbdata, outfilename, file_width, file_height);
+
+
+            strcpy(outfilename + (infilelen - 4), "png");
+            rgb24_2_png(rgbdata, outfilename, file_width, file_height);
+        }
+        else
+        {
+            printf("****Input Error ****\n\n");
+            return 0;
+        }
+    }
+
     free(rgbdata);
-    fclose(rgbfile);
-
+    free(yuvdata);
+    return 0;
+    
 }

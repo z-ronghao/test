@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <string.h>
 #include <setjmp.h>
+#include <sys/stat.h>
+//#include <jpeglib.h>
 #include <libpng/png.h>
 #include <libturbo-jpeg/turbojpeg.h>
 
@@ -32,21 +34,17 @@ typedef struct {
     unsigned int   biClrImportant; /* Number of important colors */
 } BitmapInfoHeader;
 
-int read_bmpinfo(char *imageName, int *width, int *height);
-int read_pnginfo(char *imageName, int *width, int *height);
-int read_jpeginfo(char *imageName, int *width, int *height);
+uint8_t clip_value(uint8_t x, uint8_t min_val, uint8_t  max_val);
 
-int bmp_2_rgb24(char* bmpName, uint8_t *rgbdata);
-int png_2_rgb24(char* pngName, uint8_t *rgbdata);
-int jpeg_2_rgb24(char* jpegName, uint8_t *rgbdata);
-int jpeg_2_yuv420(char* bmpName, uint8_t *yuvata);
+int bmp_2_rgb24(char* bmpName, uint8_t **rgbdata, int *file_width, int *file_height);
+int png_2_rgb24(char* pngName, uint8_t **rgbdata, int *file_width, int *file_height);
+int jpeg_2_yuv420(char* bmpName, uint8_t **yuvata,int *file_width, int *file_height, int* yuv_size);
 
-int rgb24_2_yuv420(uint8_t *rgbdata, uint8_t *yuvdata);
-int yuv420_2_rgb24(uint8_t *yuvdata, uint8_t *rgbdata);
+int rgb24_2_yuv420(uint8_t *rgbdata, uint8_t *yuvdata, int width, int height);
+int yuv420_2_rgb24(uint8_t *yuvdata, uint8_t *rgbdata, int width, int height);
 
 int rgb24_2_bmp(uint8_t *rgbdata, char *bmpName, int width, int height);
 int rgb24_2_png(uint8_t *rgbdata, char *pngName, int width, int height);
-int rgb24_2_jpeg(uint8_t *rgbdata, char *jpegName, int width, int height);
 int yuv420_2_jpeg(uint8_t *yuvdata, char *jpegName, int width, int height);
 
 
